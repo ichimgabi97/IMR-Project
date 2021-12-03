@@ -108,4 +108,108 @@ public class Table : MonoBehaviour
     {
         return table;
     }
+
+    private bool CheckFinishedOnRows()
+    {
+        for (int i = 0; i <= 6; i++)
+        {
+            int consecutive = 0;
+            int prevCheckedPlayer = 0;
+
+            for (int j = 0; j <= 7; j++)
+            {
+                if (table[i][j] == prevCheckedPlayer)
+                {
+                    consecutive++;
+                    if (consecutive == 4)
+                    {
+                        return true
+                    }
+                }
+                else
+                {
+                    consecutive = 0;
+                    prevCheckedPlayer = table[i][j]
+                }
+            }
+        }
+    }
+
+    private bool CheckFinishedOnColumns()
+    {
+        for (int j = 0; j <= 7; j++)
+        {
+            int consecutive = 0;
+            int prevCheckedPlayer = 0;
+
+            for (int i = 0; i <= 6; i++)
+            {
+                if (table[i][j] == prevCheckedPlayer)
+                {
+                    consecutive++;
+                    if (consecutive == 4)
+                    {
+                        return true
+                    }
+                }
+                else
+                {
+                    consecutive = 0;
+                    prevCheckedPlayer = table[i][j]
+                }
+            }
+        }
+    }
+
+    private bool CheckFinishedOnUpDiagonalsFromPoint(int i, int j)
+    {
+        if (i <= 6 - 4)
+        {
+            if (j >= 3)
+            {
+                int checked = 1;
+                while (checked < 4)
+                {
+                    if (table[i - checked][j - checked] != table[i][j])
+                        break;
+                }
+                if (checked == 4)
+                    return true;
+                }
+            }
+
+            if (j <= 7 - 4)
+            {
+                int checked = 1;
+                while (checked < 4)
+                {
+                    if (table[i + checked][j + checked] != table[i][j])
+                        break;
+                }
+                if (checked == 4)
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private bool CheckFinishedOnDiagonals()
+    {
+        for (int i = 0; i <= table.Length; i++)
+        {
+            for (int j = 0; j <= table[i].Length; j++)
+            {
+                if (CheckFinishedOnUpDiagonalsFromPoint(i, j))
+                    return true
+            }
+        }
+
+        return false
+    }
+
+    bool GameEnded()
+    {
+        return CheckFinishedOnRows() || CheckFinishedOnColumns() || CheckFinishedOnDiagonals();
+    }
 }
