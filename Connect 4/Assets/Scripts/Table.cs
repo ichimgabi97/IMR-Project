@@ -118,47 +118,51 @@ public class Table : MonoBehaviour
 
             for (int j = 0; j <= 7; j++)
             {
-                if (table[i][j] == prevCheckedPlayer)
+                if (table[i, j] == prevCheckedPlayer)
                 {
                     consecutive++;
                     if (consecutive == 4)
                     {
-                        return true
+                        return true;
                     }
                 }
                 else
                 {
                     consecutive = 0;
-                    prevCheckedPlayer = table[i][j]
+                    prevCheckedPlayer = table[i, j];
                 }
             }
         }
+
+        return false;
     }
 
     private bool CheckFinishedOnColumns()
     {
-        for (int j = 0; j <= 7; j++)
+        for (int j = 0; j < 7; j++)
         {
             int consecutive = 0;
             int prevCheckedPlayer = 0;
 
-            for (int i = 0; i <= 6; i++)
+            for (int i = 0; i < 6; i++)
             {
-                if (table[i][j] == prevCheckedPlayer)
+                if (table[i, j] == prevCheckedPlayer)
                 {
                     consecutive++;
                     if (consecutive == 4)
                     {
-                        return true
+                        return true;
                     }
                 }
                 else
                 {
                     consecutive = 0;
-                    prevCheckedPlayer = table[i][j]
+                    prevCheckedPlayer = table[i, j];
                 }
             }
         }
+
+        return false;
     }
 
     private bool CheckFinishedOnUpDiagonalsFromPoint(int i, int j)
@@ -167,26 +171,28 @@ public class Table : MonoBehaviour
         {
             if (j >= 3)
             {
-                int checked = 1;
-                while (checked < 4)
+                int ok = 1;
+                while (ok < 4)
                 {
-                    if (table[i - checked][j - checked] != table[i][j])
+                    if (table[i - ok, j - ok] != table[i, j])
                         break;
                 }
-                if (checked == 4)
+                if (ok == 4) 
+                { 
                     return true;
                 }
             }
 
             if (j <= 7 - 4)
             {
-                int checked = 1;
-                while (checked < 4)
+                int ok = 1;
+                while (ok < 4)
                 {
-                    if (table[i + checked][j + checked] != table[i][j])
+                    if (table[i + ok, j + ok] != table[i, j])
                         break;
                 }
-                if (checked == 4)
+                if (ok == 4) 
+                { 
                     return true;
                 }
             }
@@ -198,14 +204,14 @@ public class Table : MonoBehaviour
     {
         for (int i = 0; i <= table.Length; i++)
         {
-            for (int j = 0; j <= table[i].Length; j++)
+            for (int j = 0; j <= table.GetLength(0); j++)
             {
                 if (CheckFinishedOnUpDiagonalsFromPoint(i, j))
-                    return true
+                    return true;
             }
         }
 
-        return false
+        return false;
     }
 
     bool GameEnded()
