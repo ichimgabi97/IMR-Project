@@ -7,9 +7,10 @@ public class Table : MonoBehaviour
 {
     private int[ , ] table;
     private Dictionary<Tuple<int, int>, Vector3> tablePieces;
-    public GameObject player1;
-    public GameObject player2;
-
+    public List<GameObject> player1;
+    public int player1Piece;
+    public List<GameObject> player2;
+    public int player2Piece;
 
     // Start is called before the first frame update
     void Start()
@@ -77,12 +78,12 @@ public class Table : MonoBehaviour
                     //TableView(table);
                     if(player == 0)
                     {
-                        GameObject instantiatedObject = Instantiate(player1, tablePieces[new Tuple<int, int>(i, column)], Quaternion.Euler(0f, 0f, 0f));
+                        GameObject instantiatedObject = Instantiate(player1[player1Piece], tablePieces[new Tuple<int, int>(i, column)], Quaternion.Euler(0f, 0f, 0f));
                         instantiatedObject.name = "Player 1";
                     }
                     else
                     {
-                        GameObject instantiatedObject = Instantiate(player2, tablePieces[new Tuple<int, int>(i, column)], Quaternion.Euler(0f, 0f, 0f));
+                        GameObject instantiatedObject = Instantiate(player2[player2Piece], tablePieces[new Tuple<int, int>(i, column)], Quaternion.Euler(0f, 0f, 0f));
                         instantiatedObject.name = "Player 2";
                     }
                     break;
