@@ -24,11 +24,6 @@ public class InputColumn : MonoBehaviour
     {
         int colNumber = System.Int32.Parse(new string(column.name[column.name.Length - 1], 1));
         //Debug.Log(column);
-        if (table.CheckIfMoveIsPossible(colNumber))
-        {
-            
-            table.MovePiece(colNumber, gameManager.GetPlayer());
-            gameManager.SetPlayer(gameManager.GetPlayer() + 1);
-        }
+        gameManager.MoveMade(colNumber);       
     }
 }
