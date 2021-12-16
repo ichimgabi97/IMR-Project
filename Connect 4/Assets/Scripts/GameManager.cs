@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
                 }
             
                 //AI
-                Debug.Log("AI call");
+                Debug.Log("AI moves: " + AI.AIMove());
                 tableObject.MovePiece(AI.AIMove(), 1);
                 if (HasGameEnded(table, 2))
                 {
