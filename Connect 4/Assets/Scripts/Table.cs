@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Table : MonoBehaviour
 {
-    private int[ , ] table;
-    private Dictionary<Tuple<int, int>, Vector3> tablePieces;
+    protected int[ , ] table;
+    protected Dictionary<Tuple<int, int>, Vector3> tablePieces;
     public List<GameObject> player1;
     public int player1Piece;
     public List<GameObject> player2;
@@ -67,7 +67,7 @@ public class Table : MonoBehaviour
         Debug.Log(result);
     }
 
-    public void MovePiece(int column, int player)
+    virtual public void MovePiece(int column, int player)
     {
         if (CheckIfMoveIsPossible(column))
         {
@@ -78,13 +78,11 @@ public class Table : MonoBehaviour
                     //TableView(table);
                     if(player == 0)
                     {
-                        GameObject instantiatedObject = Instantiate(player1[player1Piece], tablePieces[new Tuple<int, int>(i, column)], Quaternion.Euler(0f, 0f, 0f));
-                        instantiatedObject.name = "Player 1";
+                        instantiatePlayer1Piece(i, column);
                     }
                     else
                     {
-                        GameObject instantiatedObject = Instantiate(player2[player2Piece], tablePieces[new Tuple<int, int>(i, column)], Quaternion.Euler(0f, 0f, 0f));
-                        instantiatedObject.name = "Player 2";
+                        instantiatePlayer2Piece(i, column);
                     }
                     break;
                 }
@@ -93,6 +91,20 @@ public class Table : MonoBehaviour
             Debug.Log("col Full: " + column);
         }
     }
+
+    virtual public void instantiatePlayer1Piece(int row, int column)
+    {    
+        GameObject instantiatedObject = Instantiate(player1[player1Piece], tablePieces[new Tuple<int, int>(row, column)], Quaternion.Euler(0f, 0f, 0f));
+        instantiatedObject.name = "Player 1";
+    }
+
+
+    virtual public void instantiatePlayer2Piece(int row, int column) 
+    { 
+        GameObject instantiatedObject = Instantiate(player2[player2Piece], tablePieces[new Tuple<int, int>(row, column)], Quaternion.Euler(0f, 0f, 0f));
+        instantiatedObject.name = "Player 2";
+    }
+
 
     public bool CheckIfMoveIsPossible(int column)
     {

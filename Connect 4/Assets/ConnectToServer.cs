@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine.SceneManagement;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
@@ -20,11 +21,14 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
+        TypedLobby typed = new TypedLobby("Connect4", LobbyType.Default);
+        PhotonNetwork.JoinLobby(typed);
     }
 
     public override void OnJoinedLobby()
     {
+        Debug.Log(PhotonNetwork.CloudRegion);
         SceneManager.LoadScene("MultiplayerJoin");
+        PhotonNetwork.AutomaticallySyncScene = false;
     }
 }

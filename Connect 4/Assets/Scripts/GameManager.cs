@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
 
     private int player;
@@ -35,24 +36,24 @@ public class GameManager : MonoBehaviour
         return this.player;
     }
 
-    public void MoveMade(int column)
+    virtual public void MoveMade(int column)
     {
         if (tableObject.CheckIfMoveIsPossible(column))
         {
             
-                tableObject.MovePiece(column, this.player);
-                if (HasGameEnded(table, 1))
-                {
-                    Debug.Log("Player 1 Won !!!");
-                }
+            tableObject.MovePiece(column, this.player);
+            if (HasGameEnded(table, 1))
+            {
+                Debug.Log("Player 1 Won !!!");
+            }
             
-                //AI
-                Debug.Log("AI moves: " + AI.AIMove());
-                tableObject.MovePiece(AI.AIMove(), 1);
-                if (HasGameEnded(table, 2))
-                {
-                    Debug.Log("Player 2 Won !!!");
-                }
+            //AI
+            Debug.Log("AI moves: " + AI.AIMove());
+            tableObject.MovePiece(AI.AIMove(), 1);
+            if (HasGameEnded(table, 2))
+            {
+                Debug.Log("Player 2 Won !!!");
+            }
             
 
         }
