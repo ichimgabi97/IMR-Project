@@ -13,6 +13,11 @@ public class MainMenu : MonoBehaviour
 
     public void EasyButtonClicked()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Game");
+    }
+    
+    public void MultiplayerButtonClicked()
+    {
+        SceneManager.LoadScene("MultiplayerLoading");
     }
 }
