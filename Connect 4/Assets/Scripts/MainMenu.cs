@@ -20,4 +20,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("MultiplayerLoading");
     }
+
+    public void CustomButtonClicked()
+    {
+        SceneManager.LoadScene("SampleScene 1");
+    }
 }
