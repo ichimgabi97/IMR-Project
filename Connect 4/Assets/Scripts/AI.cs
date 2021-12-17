@@ -59,7 +59,7 @@ public class AI : MonoBehaviour
     private void MakeACopy(int [,] table)
     {
 
-        TableView(this.tableAI);
+        //TableView(this.tableAI);
         for (int i = 0; i < 6; i++)
         {
             for (int j = 0; j < 7; j++)
@@ -80,15 +80,24 @@ public class AI : MonoBehaviour
         return false;
     }
 
-    private int [, ] SimulateMove(int column, int[,] table)
+    private int [, ] SimulateMove(int column, int[,] table, bool isAITurn)
     {
         if (CheckIfMoveIsPossible(column, table))
         {
             for (int i = 5; i >= 0; i--)
                 if (table[i, column] == 0)
                 {
-                    table[i, column] = 2;
-                    break;
+                    if (isAITurn)
+                    {
+                        table[i, column] = 2;
+                        break;
+                    }
+                    else
+                    {
+                        table[i, column] = 1;
+                        break;
+                    }
+                    
                 }
         }
 
@@ -97,11 +106,187 @@ public class AI : MonoBehaviour
 
 
     //ToDo
-    public int Evaluation(int position, int[,] table)
+    public int Evaluation(int[,] table)
     {
-        int result = Random.Range(0, 30);
+        int score = 0;
 
-        return result;
+        //Rows
+        for (int j = 0; j < 4; j++)
+            for (int i = 0; i < 6; i++)
+            {
+                int player = 0;
+                int ai = 0;
+                int offset = 3;
+
+                //check 4 positions to see the number of apparition of player and ai
+                while (offset >= 0)
+                {
+                    if(table[i, j + offset] == 1)
+                    {
+                        player += 1;
+                    }
+                    else if(table[i, j + offset] == 2)
+                    {
+                        ai += 1;
+                    }
+
+                    offset -= 1;
+                }
+
+                //score for winning move 
+                if (player == 4 && ai == 0)
+                {
+                    score -= 900;
+                }
+                else if(player == 0 && ai == 4)
+                {
+                    score += 900;
+                }
+
+                //score for 3 inline
+                if(player == 3 && ai == 0)
+                {
+                    score -= 10;
+                }
+                else if(player == 0 && ai == 3)
+                {
+                    score += 10;
+                }
+            }
+
+        //Columns
+        for (int j = 0; j < 7; j++)
+            for (int i = 0; i < 3; i++)
+            {
+                int player = 0;
+                int ai = 0;
+                int offset = 3;
+
+                //check 4 positions to see the number of apparition of player and ai
+                while (offset >= 0)
+                {
+                    if (table[i + offset, j] == 1)
+                    {
+                        player += 1;
+                    }
+                    else if (table[i + offset, j] == 2)
+                    {
+                        ai += 1;
+                    }
+
+                    offset -= 1;
+                }
+
+                //score for winning move 
+                if (player == 4 && ai == 0)
+                {
+                    score -= 900;
+                }
+                else if (player == 0 && ai == 4)
+                {
+                    score += 900;
+                }
+
+                //score for 3 inline
+                if (player == 3 && ai == 0)
+                {
+                    score -= 10;
+                }
+                else if (player == 0 && ai == 3)
+                {
+                    score += 10;
+                }
+            }
+
+        //diagonal 1
+         for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 4; j++)
+            {
+                int player = 0;
+                int ai = 0;
+                int offset = 3;
+
+                //check 4 positions to see the number of apparition of player and ai
+                while (offset >= 0)
+                {
+                    if (table[i + offset, j + offset] == 1)
+                    {
+                        player += 1;
+                    }
+                    else if (table[i + offset, j + offset] == 2)
+                    {
+                        ai += 1;
+                    }
+
+                    offset -= 1;
+                }
+
+                //score for winning move 
+                if (player == 4 && ai == 0)
+                {
+                    score -= 900;
+                }
+                else if (player == 0 && ai == 4)
+                {
+                    score += 900;
+                }
+
+                //score for 3 inline
+                if (player == 3 && ai == 0)
+                {
+                    score -= 10;
+                }
+                else if (player == 0 && ai == 3)
+                {
+                    score += 10;
+                }
+            }
+
+        //diagonal 2
+        for (int i = 0; i < 3; i++)
+            for (int j = 3; j < 7; j++)
+            {
+                int player = 0;
+                int ai = 0;
+                int offset = 3;
+
+                //check 4 positions to see the number of apparition of player and ai
+                while (offset >= 0)
+                {
+                    if (table[i + offset, j - offset] == 1)
+                    {
+                        player += 1;
+                    }
+                    else if (table[i + offset, j - offset] == 2)
+                    {
+                        ai += 1;
+                    }
+
+                    offset -= 1;
+                }
+
+                //score for winning move 
+                if (player == 4 && ai == 0)
+                {
+                    score -= 900;
+                }
+                else if (player == 0 && ai == 4)
+                {
+                    score += 900;
+                }
+
+                //score for 3 inline
+                if (player == 3 && ai == 0)
+                {
+                    score -= 10;
+                }
+                else if (player == 0 && ai == 3)
+                {
+                    score += 10;
+                }
+            }
+        
+        return score;
     }
 
     private int MaxTwoNumbers(int a, int b)
@@ -130,9 +315,11 @@ public class AI : MonoBehaviour
 
     public int Minimax( int position, int[, ] table, int depth, bool maximizingPlayer = true, int alpha = -999999, int beta = 999999)
     {
-        if (depth == 0 || gameManager.HasGameEnded(SimulateMove(position, table), 2))
+        int[,] tablePos = SimulateMove(position, table, maximizingPlayer);
+
+        if (depth == 0 || gameManager.HasGameEnded(tablePos, maximizingPlayer ? 2 : 1))
         {
-            return Evaluation(position, table);
+            return Evaluation(tablePos);
         }
 
         if (maximizingPlayer)
@@ -140,7 +327,7 @@ public class AI : MonoBehaviour
             int maxEval = -999999;
             for(int i = 0; i < 7; i++)
             {
-                int eval = Minimax(i, table, depth - 1, false, alpha, beta);
+                int eval = Minimax(i, tablePos, depth - 1, false, alpha, beta);
                 maxEval = MaxTwoNumbers(maxEval, eval);
                 alpha = MaxTwoNumbers(alpha, eval);
                 if(beta <= alpha)
@@ -155,7 +342,7 @@ public class AI : MonoBehaviour
             int minEval = 999999;
             for (int i = 0; i < 7; i++)
             {
-                int eval = Minimax(i, table, depth - 1, true, alpha, beta);
+                int eval = Minimax(i, tablePos, depth - 1, true, alpha, beta);
                 minEval = MinTwoNumbers(minEval, eval);
                 beta = MinTwoNumbers(beta, eval);
                 if(beta <= alpha)
@@ -170,18 +357,33 @@ public class AI : MonoBehaviour
     public int AIMove()
     {
         int bestMove = 12;
-        int bestMoveEvaluation = -999999;
-        for(int i = 0; i < 7; i++)
+        int errorAI = 0;
+        do
         {
-            MakeACopy(tableObject.GetTable());
-            if (bestMoveEvaluation < Minimax(i, this.tableAI, 3))
+            errorAI += 1;
+            bestMove = 12;
+            int bestMoveEvaluation = -999999;
+            for (int i = 0; i < 7; i++)
             {
-                bestMoveEvaluation = Minimax(i, this.tableAI, 3);
-                bestMove = i;
-            }
-               
-        }
+                MakeACopy(tableObject.GetTable());
 
+                int result = Minimax(i, this.tableAI, 15);
+
+                if (bestMoveEvaluation < result)
+                {
+                    bestMoveEvaluation = result;
+                    bestMove = i;
+                }
+
+            }
+
+            if(errorAI > 6)
+            {
+                Debug.Log("AI error");
+                break;
+            }
+
+        } while (!CheckIfMoveIsPossible(bestMove, tableObject.GetTable()));
         return bestMove;
     }
 

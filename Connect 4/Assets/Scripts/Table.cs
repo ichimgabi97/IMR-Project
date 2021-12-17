@@ -22,12 +22,12 @@ public class Table : MonoBehaviour
         float y = 8f;
         for (int i = 0; i < 6; i++)
         {
-            float x = 0f;
+            float x = -4f;
             for (int j = 0; j < 7; j++)
             {
                 this.table[i, j] = 0;
-                tablePieces.Add(new Tuple<int, int>(i, j), new Vector3(x, y, 0));
-                x += 1.5f;
+                tablePieces.Add(new Tuple<int, int>(i, j), new Vector3(x, y, 4));
+                x += 1.46f;
             }
             y -= 1.5f;
         }
