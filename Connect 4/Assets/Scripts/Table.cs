@@ -17,7 +17,7 @@ public class Table : MonoBehaviour
     {
         tablePieces = new Dictionary<Tuple<int, int>, Vector3>();
 
-        this.table = new int[6, 7];
+        int[,] table = new int[6, 7];
 
         float y = 8f;
         for (int i = 0; i < 6; i++)
@@ -25,12 +25,15 @@ public class Table : MonoBehaviour
             float x = -4f;
             for (int j = 0; j < 7; j++)
             {
-                this.table[i, j] = 0;
+                table[i, j] = 0;
                 tablePieces.Add(new Tuple<int, int>(i, j), new Vector3(x, y, 4));
                 x += 1.46f;
             }
             y -= 1.5f;
         }
+        Debug.Log("Table is");
+        Debug.Log(table);
+        SetTable(table);
             
         Debug.Log("POsition of piece: " + tablePieces[new Tuple<int, int>(3, 0)]);
 
@@ -40,6 +43,16 @@ public class Table : MonoBehaviour
     void Update()
     {
         
+    }
+
+    virtual public int[, ] GetTable()
+    {
+        return table;
+    }
+
+    virtual public void SetTable(int[,] newTable)
+    {
+        table = newTable;
     }
 
     private void TableView(int[,] table)
@@ -72,11 +85,15 @@ public class Table : MonoBehaviour
         if (CheckIfMoveIsPossible(column))
         {
             for (int i = 5; i >= 0; i--)
+            {
+                int[,] table = GetTable();
                 if (table[i, column] == 0)
                 {
+
                     table[i, column] = player + 1;
+                    SetTable(table);
                     //TableView(table);
-                    if(player == 0)
+                    if (player == 0)
                     {
                         instantiatePlayer1Piece(i, column);
                     }
@@ -86,6 +103,7 @@ public class Table : MonoBehaviour
                     }
                     break;
                 }
+            }
         }else
         {
             Debug.Log("col Full: " + column);
@@ -109,16 +127,11 @@ public class Table : MonoBehaviour
     public bool CheckIfMoveIsPossible(int column)
     {
         for (int i = 5; i >= 0; i--)
-            if(table[i, column] == 0)
+            if(GetTable()[i, column] == 0)
             {
                 return true;
             }
         
         return false;
-    }
-
-    public int[,] GetTable()
-    {
-        return table;
     }
 }

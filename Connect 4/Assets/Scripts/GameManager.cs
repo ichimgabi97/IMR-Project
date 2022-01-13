@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private int player;
 
     public Table tableObject;
-    private int[,] table;
 
     public AI AI;
 
@@ -17,7 +16,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Start()
     {
         this.player = 0;
-        table = tableObject.GetTable();
     }
 
     // Update is called once per frame
@@ -42,7 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             
             tableObject.MovePiece(column, this.player);
-            if (HasGameEnded(table, 1))
+            if (HasGameEnded(tableObject.GetTable(), 1))
             {
                 Debug.Log("Player 1 Won !!!");
             }
@@ -50,7 +48,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             //AI
             Debug.Log("AI moves: " + AI.AIMove());
             tableObject.MovePiece(AI.AIMove(), 1);
-            if (HasGameEnded(table, 2))
+            if (HasGameEnded(tableObject.GetTable(), 2))
             {
                 Debug.Log("Player 2 Won !!!");
             }

@@ -6,9 +6,6 @@ using Photon.Realtime;
 
 public class MultiplayerGameManager : GameManager
 {
-
-    int currentPlayer = 0;
-    
     int[] players = new int[2];
     int numberOfPlayers = 0;
 
@@ -35,9 +32,22 @@ public class MultiplayerGameManager : GameManager
         ResetCurrentPlayer();
     }
 
+    private void SetCurrentPlayer(int playerId)
+    {
+        ExitGames.Client.Photon.Hashtable dict = new ExitGames.Client.Photon.Hashtable();
+        dict["currentPlayer"] = playerId;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(dict);
+    }
+
+    private int GetCurrentPlayer()
+    {
+        ExitGames.Client.Photon.Hashtable dict = PhotonNetwork.CurrentRoom.CustomProperties;
+        return (int)dict["currentPlayer"];
+    }
+
     private void ResetCurrentPlayer()
     {
-        currentPlayer = (int)(Random.Range(0f, 1f) * numberOfPlayers);
+        SetCurrentPlayer((int)(Random.Range(0f, 1f) * numberOfPlayers));
     }
 
     public override void OnPlayerEnteredRoom(Player player)
@@ -55,7 +65,7 @@ public class MultiplayerGameManager : GameManager
 
     public bool IsMyTurn()
     {
-        return players[currentPlayer] == PhotonNetwork.LocalPlayer.ActorNumber;
+        return players[GetCurrentPlayer()] == PhotonNetwork.LocalPlayer.ActorNumber;
     }
 
     public bool HasGameEndedForAnyPlayer(int[,] table)
@@ -74,15 +84,15 @@ public class MultiplayerGameManager : GameManager
     public override void MoveMade(int column)
     {
         Debug.Log("Players: " + players[0] + players[1]);
-        Debug.Log("Current player:" + currentPlayer);
+        Debug.Log("Current player:" + GetCurrentPlayer());
         Debug.Log(!HasGameEndedForAnyPlayer(tableObject.GetTable()));
         Debug.Log(IsMyTurn());
         Debug.Log(tableObject.CheckIfMoveIsPossible(column));
         if (!HasGameEndedForAnyPlayer(tableObject.GetTable()) && IsMyTurn() && tableObject.CheckIfMoveIsPossible(column))
         {
             Debug.Log("Placing Piece");
-            tableObject.MovePiece(column, currentPlayer);
-            currentPlayer = (currentPlayer + 1) % 2;
+            tableObject.MovePiece(column, GetCurrentPlayer());
+            SetCurrentPlayer((GetCurrentPlayer() + 1) % 2);
         }
     }
 }
